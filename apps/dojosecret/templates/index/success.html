@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Welcome - {{ user.name }}</title>
+    <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="https://use.fontawesome.com/680ef57b8e.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-header">
+        <div class='btn-toolbar pull-right'>
+          <div class='btn-group'>
+            <a href="/logout" class='btn btn-info btn-xs pull-right'><span class="glyphicon glyphicon-log-out"></span> Loggout</a>
+          </div>
+        </div>
+        <h3><span class="glyphicon glyphicon-user"></span> Welcome {{ user.name }}</h3>
+      </div>
+      <div class="row">
+        <div class="content">
+          <div class="col-sm-4 col-sm-offset well">
+            <form class="" action="/create_comment" method="post">
+              {% csrf_token %}
+              <textarea name="comment" class="form-control" placeholder="Post your secret here..."></textarea>
+              <br>
+              <input type="submit" value="Post" class="btn btn-success">
+            </form>
+          </div>
+          <div class="comment">
+            <div class="col-md-6 col-sm-offset-1 well">
+              <h3>Most {{ sort }} secrets..</h3>
+              <a href="/success/{{alt_sort}}"><h5>Most {{alt_sort}} secrets</h5></a>
+              {% for comment in comments %}
+                <p>{{ comment.created_at }}</p>
+                <p> {{comment.content}} {{ comment.num_likes }} Like(s)</p>
+                <p>{% if comment.user.id != request.session.user_id %} {% if user in comment.likes.all %}<a href="/unlike/{{comment.id}}"><span class="glyphicon glyphicon-thumbs-down"></span></a>{% else %}<a href="/like/{{comment.id}}"><span class="glyphicon glyphicon-thumbs-up"></span></a>{% endif %}{% endif %}{% if comment.user.id == request.session.user_id %}<a href="/delete/{{comment.id}}"><span class="glyphicon glyphicon-trash"></span></a>{% endif %}</p>
+                <hr>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
